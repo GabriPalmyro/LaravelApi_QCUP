@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Post;
 
 
@@ -42,7 +43,7 @@ class JogadorController extends Controller
         //
     }
 
-    
+
     public function edit($id)
     {
         $jogador = Jogador::findOrFail($id);
@@ -70,5 +71,30 @@ class JogadorController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function adicionarJogadorAoTime(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nome' => 'required|string|max:150',
+            'nickname' => 'required|string|max:80',
+            'email' => 'required|string|email|max:100',
+            'funcao' => 'required|string|max:180',
+            'id_time' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['erro' => $validator->errors()], 422);
+        }
+
+        $jogador = Jogador::create([
+            'nome' => $request->nome,
+            'nickname' => $request->nickname,
+            'email' => $request->email,
+            'funcao' => $request->funcao,
+            'id_time' => $request->id_time,
+        ]);
+
+        return response()->json(['message' => 'Jogador criado com successo'], 200);
     }
 }

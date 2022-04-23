@@ -2,27 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Liga;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
-
-
 use App\Models\Time;
+use Illuminate\Support\Facades\Validator;
+use PhpParser\Node\Stmt\Echo_;
 
 class TimeController extends Controller
 {
     public function index()
-    {   
-
+    {
         $dados = Time::select('id', 'nome', 'email', 'senha', 'logo')->get();
-
         return response()->json($dados);
+    }
 
+    public function buscarJogadoresDoTimePeloId(Request $request)
+    {
+        $dados = Time::find($request->id_time)->jogadores;
+        return response()->json(['jogadores' => $dados], 200);
+    }
 
-        // return view('times.index', [
-        //     'times' => $times,
-        // ]);
+    public function cadastrarTimeEmLiga(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id_time'   =>      'required|string',
+            'id_liga'   =>      'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['erro' => $validator->errors()], 422);
+        }
+
+        $time = Time::find($request->id_time);
+        $time->ligas()->attach($request->id_liga);
+
+        $response = ["message" => 'Time registrado na liga'];
+        return response($response, 200);
+    }
+
+    public function buscarLigasDoTime(Request $request)
+    {
+        $ligas = Time::find($request->id_time)->ligas()->get();
+        return response(["ligas" => $ligas], 200);
     }
 
     public function create()
@@ -62,9 +83,8 @@ class TimeController extends Controller
     {
         return response()->json([
             'time' => $time
-        ]);
+        ], 200);
     }
-
 
     public function edit($id)
     {
@@ -119,12 +139,6 @@ class TimeController extends Controller
         // return redirect()->route('times.store');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Time $time)
     {
         try {
@@ -138,9 +152,8 @@ class TimeController extends Controller
             return response()->json([
                 'message' => 'Time Deleted Successfully!!'
             ]);
-
-            } catch (\Exception $e) {
-           // \Log::error($e->getMessage());
+        } catch (\Exception $e) {
+            // \Log::error($e->getMessage());
             return response()->json([
                 'message' => 'Something goes wrong while deleting a time!!'
             ]);

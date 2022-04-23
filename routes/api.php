@@ -1,15 +1,26 @@
 <?php
 
+use App\Http\Controllers\Auth\ApiAuthController;
+use App\Http\Controllers\JogadorController;
+use App\Http\Controllers\LigaController;
 use App\Http\Controllers\TimeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// JOGADOR ROUTES
-Route::put('/jogadores/editar', [JogadorController::class, 'update'])->name('jogadores.update');
-Route::post('/jogadores', [JogadorController::class, 'store'])->name('jogadores.store');
-Route::get('/jogadores', [JogadorController::class, 'index'])->name('jogadores.index');
+Route::group(['middleware' => ['cors', 'json.response']], function () {
+    Route::post('/login', [ApiAuthController::class, 'login'])->name('login.api');
+    Route::post('/register', [ApiAuthController::class, 'register'])->name('register.api');
+    Route::get('/ligas', [LigaController::class, 'mostrarLigas'])->name('ligas.api');
+    Route::get('/times', [TimeController::class, 'index'])->name('index.api');
+    Route::post('/jogadores', [TimeController::class, 'buscarJogadoresDoTimePeloId'])->name('buscarJogadores.api');
+    Route::post('/nova-liga', [LigaController::class, 'adicionarNovaLiga'])->name('novaLiga.api');
+    Route::post('times/ligas', [TimeController::class, 'buscarLigasDoTime'])->name('buscarLigasDoTime.api');
+    Route::post('liga/times', [LigaController::class, 'buscarTimesDaLiga'])->name('buscarTimesDaLiga.api');
+});
 
-// TIMES ROUTES
-Route::put('/times/editar', [TimeController::class, 'update'])->name('times.update');
-Route::post('/times', [TimeController::class, 'store'])->name('times.store');
-Route::get('/times', [TimeController::class, 'index'])->name('times.index');
+Route::middleware('auth:api')->group(function () {
+    Route::post('/logout', [ApiAuthController::class, 'logout'])->name('logout.api');
+    Route::get('/refresh', [ApiAuthController::class, 'authenticatedTimeDetails'])->name('refresh.api');
+    Route::post('times/novo-jogador', [JogadorController::class, 'adicionarJogadorAoTime'])->name('adicionarJogador.api');
+    Route::post('times/participar-liga', [TimeController::class, 'cadastrarTimeEmLiga'])->name('cadastrarTimeEmLiga.api');
+});

@@ -15,14 +15,18 @@ class CreatePartidasTable extends Migration
     {
         Schema::create('partidas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_liga');
-            $table->string('modo');
+            $table->unsignedBigInteger('id_liga')->unsigned();
+            $table->string('modo')->nullable();
             $table->string('jogo');
             $table->date('data');
-            $table->string('link');
+            $table->string('link')->nullable()->default(null);
             $table->timestamps();
+        });
+
+        Schema::table('partidas', function (Blueprint $table) {
             $table->foreign('id_liga')
-              ->references('id')->on('ligas')->onDelete('cascade');
+                ->references('id')->on('ligas')
+                ->onDelete('cascade');
         });
     }
 

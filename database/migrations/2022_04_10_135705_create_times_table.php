@@ -15,11 +15,16 @@ class CreateTimesTable extends Migration
     {
         Schema::create('times', function (Blueprint $table) {
             $table->id();
-            $table->string('nome', 150);
+            $table->string('nome', 100);
             $table->string('email', 150);
-            $table->string('senha', 35);
-            $table->string('logo', 200);
+            $table->string('senha', 150);
+            $table->string('logo', 200)->nullable();
+            $table->rememberToken();
             $table->timestamps();
+        });
+
+        Schema::table('times', function (Blueprint $table) {
+            $table->unique('email');
         });
     }
 
