@@ -15,8 +15,8 @@ class CreateTimePartidasTable extends Migration
     {
         Schema::create('time_partidas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_time')->index();;
-            $table->unsignedBigInteger('id_partida')->index();;
+            $table->unsignedBigInteger('id_time')->index();
+            $table->unsignedBigInteger('id_partida')->index();
             $table->string('pontuacao')->nullable()->default(null);
             $table->timestamps();
         });

@@ -44,6 +44,14 @@ class LigaController extends Controller
     public function buscarTimesDaLiga(Request $request)
     {
         $times = Liga::find($request->id_liga)->times()->get();
-        return response(["times" => $times], 200);
+        return response($times, 200);
+    }
+
+    public function buscarLigaPorId(Request $request)
+    {
+        $liga = Liga::find($request->id_liga);
+        $times = Liga::find($request->id_liga)->times()->get();
+
+        return response(['liga' => $liga, 'times' => $times], 200);
     }
 }
