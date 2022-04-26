@@ -2,13 +2,6 @@
 
 use Illuminate\Support\Str;
 
-$url = parse_url(getenv("mysql://bf1972a1f443f0:f6c79272@us-cdbr-east-05.cleardb.net/heroku_da92f5e15c5f366?reconnect=true"));
-
-$host = $url["host"];
-$username = $url["user"];
-$password = $url["pass"];
-$database = substr($url["path"], 1);
-
 return [
 
     /*
@@ -52,27 +45,34 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
+            'host' => env('DB_HOST', 'db4free.net'),
             'port' => env('DB_PORT', '3306'),
-            'host'      => $host,
-            'database'  => $database,
-            'username'  => $username,
-            'password'  => $password,
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
+            'database' => env('DB_DATABASE', 'qcup_database'),
+            'username' => env('DB_USERNAME', 'gabripalmyro'),
+            'password' => env('DB_PASSWORD', 'jujubebe2309'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
-            'strict' => false,
+            'prefix_indexes' => true,
+            'strict' => true,
             'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
         ],
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'host' => env('DB_HOST', 'ec2-52-86-56-90.compute-1.amazonaws.com'),
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'da5rpe22td89ld'),
-            'username' => env('DB_USERNAME', 'gcaqwahjqxpvad'),
-            'password' => env('DB_PASSWORD', '0c1b0aabd514d273c61a911555e7860f02fdc606fb08089626ced668b7e3413b'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
+            'prefix_indexes' => true,
             'schema' => 'public',
             'sslmode' => 'prefer',
         ],
@@ -122,7 +122,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
         ],
 
         'default' => [
