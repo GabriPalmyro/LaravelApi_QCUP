@@ -20,9 +20,9 @@ class CreateJogadoresTable extends Migration
             $table->string('nickname', 80);
             $table->string('email', 100);
             $table->string('funcao', 180)->default('');
-            $table->string('kills', 10)->nullable()->default(null);
-            $table->string('deaths', 10)->nullable()->default(null);
-            $table->string('assists', 10)->nullable()->default(null);
+            $table->integer('kills')->nullable()->default(0);
+            $table->integer('deaths')->nullable()->default(0);
+            $table->integer('assists')->nullable()->default(0);
             $table->timestamps();
         });
 

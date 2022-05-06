@@ -19,7 +19,7 @@ class CreatePartidasTable extends Migration
             $table->string('modo')->nullable();
             $table->string('jogo');
             $table->date('data');
-            $table->string('link')->nullable()->default(null);
+            $table->string('link')->nullable()->default('');
             $table->timestamps();
         });
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class TimeLigas extends Migration
+class CreateTimeLigasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,15 +12,17 @@ class TimeLigas extends Migration
      * @return void
      */
     public function up()
-    {
+    {   
+        Schema::dropIfExists('time_ligas');
         Schema::create('time_ligas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_liga');
-            $table->unsignedBigInteger('id_time');
-            $table->integer('pontos')->nullable()->default(null);
-            $table->integer('vitorias')->nullable()->default(null);
-            $table->integer('derrotas')->nullable()->default(null);
-            $table->integer('empates')->nullable()->default(null);
+            $table->unsignedBigInteger('id_time')->index();
+            $table->unsignedBigInteger('id_liga')->index();
+            $table->integer('pontos')->nullable()->default(0);
+            $table->integer('vitorias')->nullable()->default(0);
+            $table->integer('derrotas')->nullable()->default(0);
+            $table->integer('empates')->nullable()->default(0);
+            $table->timestamps();
         });
 
         Schema::table('time_ligas', function (Blueprint $table) {

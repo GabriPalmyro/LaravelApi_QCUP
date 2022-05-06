@@ -17,7 +17,7 @@ class CreateTimePartidasTable extends Migration
             $table->id();
             $table->unsignedBigInteger('id_time')->index();
             $table->unsignedBigInteger('id_partida')->index();
-            $table->string('pontuacao')->nullable()->default(null);
+            $table->integer('pontuacao')->nullable()->default(0);
             $table->timestamps();
         });
 
