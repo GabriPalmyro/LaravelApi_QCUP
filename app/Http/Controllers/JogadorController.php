@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Post;
+use Illuminate\Support\Facades\DB;
 
 
 use App\Models\Jogador;
 
 class JogadorController extends Controller
 {
+
+
     public function index()
     {
         $jogadores = Jogador::all();
@@ -75,16 +77,30 @@ class JogadorController extends Controller
 
     public function adicionarJogadorAoTime(Request $request)
     {
+        $messages = [
+            'email.required' => 'Um e-mail válido é necessário.',
+            'nome.required' => 'O nome completo é necessário.',
+            'nickname.required' => 'O nickname é necessário.',
+            'funcão.required' => 'A função é necessária.',
+            'id_time.required' => 'O time não foi informado. Tente novamente mais tarde.',
+        ];
+
         $validator = Validator::make($request->all(), [
             'nome' => 'required|string|max:150',
             'nickname' => 'required|string|max:80',
             'email' => 'required|string|email|max:100',
             'funcao' => 'required|string|max:180',
             'id_time' => 'required|string',
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
-            return response(['erro' => $validator->errors()], 422);
+            return response(['erro' => $validator->errors()->first()], 422);
+        }
+
+        $lengthJogador = DB::table('jogadores')->count();
+
+        if($lengthJogador >= 5) {
+            return response()->json(['erro' => 'Você já atingiu o limite de jogadores por equipe'], 422);
         }
 
         $jogador = Jogador::create([

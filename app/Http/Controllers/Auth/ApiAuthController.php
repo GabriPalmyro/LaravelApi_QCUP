@@ -16,14 +16,19 @@ class ApiAuthController extends Controller
 
     public function register(Request $request)
     {
+        $messages = [
+            'email.unique' => 'E-mail já cadastrado.',
+        ];
+
         $validator = Validator::make($request->all(), [
             'nome'  =>      'required|string|max:100',
             'email' =>      'required|string|email|max:150|unique:times',
             'senha' =>      'required|string|min:6',
             'logo'  =>      'required|string|max:200',
-        ]);
+        ], $messages);
+
         if ($validator->fails()) {
-            return response(['erro' => $validator->errors()], 422);
+            return response(['message' => $validator->errors()->first('email')], 422);
         }
 
         $time = Time::create([
@@ -55,12 +60,12 @@ class ApiAuthController extends Controller
                 $response = ["time" => $time, "token" => $token];
                 return response($response, 200);
             } else {
-                $response = ["message" => "Senha não coincide"];
+                $response = ["message" => "Senha incorreta."];
                 return response($response, 422);
             }
         } else {
-            $response = ["message" => 'Time não cadastrado no sistema'];
-            return response($response, 422);
+            $response = ["message" => 'Time não cadastrado.'];
+            return response($response, 400);
         }
     }
 

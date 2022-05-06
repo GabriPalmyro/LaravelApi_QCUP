@@ -4,7 +4,6 @@ use App\Http\Controllers\Auth\ApiAuthController;
 use App\Http\Controllers\JogadorController;
 use App\Http\Controllers\LigaController;
 use App\Http\Controllers\TimeController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['cors', 'json.response']], function () {
