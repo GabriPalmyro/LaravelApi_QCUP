@@ -115,7 +115,7 @@
           <tr>
             <td align="center" valign="top">
               <a href="https://qcup2021.web.app" target="_blank" style="display: inline-block;">
-                <img src="https://firebasestorage.googleapis.com/v0/b/qcup2021.appspot.com/o/logo_qcup.png?alt=media&token=a76b25cc-25ec-476b-8074-db2324f10232" alt="Logo" border="0" width="200" style="display: block; width: 200px; max-width: 200px; min-width: 50px;">
+                <img src="https://firebasestorage.googleapis.com/v0/b/qcup2021.appspot.com/o/logo_qcup.png?alt=media&token=a76b25cc-25ec-476b-8074-db2324f10232" alt="Logo" border="0" width="200" style="display: block; width: 200px; max-width: 200px; min-width: 50px; margin-top: 15px">
               </a>
             </td>
           </tr>
