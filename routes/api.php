@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\ApiAuthController;
 use App\Http\Controllers\JogadorController;
 use App\Http\Controllers\LigaController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\TimeController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('/times/ligas', [TimeController::class, 'buscarLigasDoTime'])->name('buscarLigasDoTime.api');
     Route::post('/liga/times', [LigaController::class, 'buscarTimesDaLiga'])->name('buscarTimesDaLiga.api');
     Route::post('/liga', [LigaController::class, 'buscarLigaPorId'])->name('buscarLigaPorId.api');
+    // Route::get('/email-send', [MailController::class, 'sendEmail'])->name('sendEmail.api');
 });
 
 Route::middleware('auth:api')->group(function () {

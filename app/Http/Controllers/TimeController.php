@@ -30,13 +30,24 @@ class TimeController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response(['erro' => $validator->errors()], 422);
+            return response(["erro" => $validator->errors()], 422);
         }
 
         $time = Time::find($request->id_time);
+
+        if (count($time->jogadores) < 5) {
+            return response(["erro" => "Termine de cadastrar os seus jogadores para concluir"], 422);
+        }
+
+        foreach ($time->ligas as &$liga) {
+            if ($liga->id == $request->id_liga) {
+                return response(["erro" => "Você já está cadastrado nesta liga!"], 422);
+            }
+        }
+
         $time->ligas()->attach($request->id_liga);
 
-        $response = ["message" => 'Time registrado na liga'];
+        $response = ["message" => "Time registrado na liga com"];
         return response($response, 200);
     }
 

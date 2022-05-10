@@ -8,6 +8,8 @@ use App\Models\Time;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ConfirmEmail;
 use Illuminate\Support\Str;
 
 
@@ -37,6 +39,13 @@ class ApiAuthController extends Controller
             'senha' => Hash::make($request['senha']),
             'logo' => $request->logo,
         ]);
+
+        $details = [
+            'title' => 'Inscrição confirmada!',
+            'body' => 'A QCUP confirmou sua inscrição'
+        ];
+       
+        Mail::to($request->email)->send(new ConfirmEmail($details));
 
         $token = $time->createToken('auth_token')->accessToken;
 
