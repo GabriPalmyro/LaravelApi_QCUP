@@ -6,6 +6,8 @@ use App\Models\Liga;
 use Illuminate\Http\Request;
 use App\Models\Time;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AddPlayerEmail;
 use PhpParser\Node\Stmt\Echo_;
 
 class TimeController extends Controller
@@ -47,7 +49,7 @@ class TimeController extends Controller
 
         $time->ligas()->attach($request->id_liga);
 
-        $response = ["message" => "Time registrado na liga com"];
+        $response = ["message" => "Time registrado na liga com sucesso"];
         return response($response, 200);
     }
 

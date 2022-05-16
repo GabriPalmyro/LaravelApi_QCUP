@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AddPlayerEmail;
+use App\Models\Time;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 
 use App\Models\Jogador;
@@ -44,7 +47,6 @@ class JogadorController extends Controller
     {
         //
     }
-
 
     public function edit($id)
     {
@@ -97,19 +99,26 @@ class JogadorController extends Controller
             return response(['erro' => $validator->errors()->first()], 422);
         }
 
-        $lengthJogador = DB::table('jogadores')->count();
+        $lengthJogadores = DB::table('jogadores')->where('id_time', $request->id_time)->count();
 
-        if($lengthJogador >= 5) {
+        if ($lengthJogadores >= 5) {
             return response()->json(['erro' => 'Você já atingiu o limite de jogadores por equipe'], 422);
         }
 
-        $jogador = Jogador::create([
+        Jogador::create([
             'nome' => $request->nome,
             'nickname' => $request->nickname,
             'email' => $request->email,
             'funcao' => $request->funcao,
             'id_time' => $request->id_time,
         ]);
+
+        $details = [
+            'title' => 'Você foi adicionado a um time!',
+            'body' => "Você foi adicionado a um time!",
+        ];
+
+        Mail::to($request->email)->send(new AddPlayerEmail($details));
 
         return response()->json(['message' => 'Jogador criado com successo'], 200);
     }
