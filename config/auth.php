@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'api',
         'passwords' => 'users',
     ],
 
@@ -42,10 +42,16 @@ return [
         ],
 
         'api' => [
-            'driver' => 'passport',
+            'driver' => 'jwt',
             'provider' => 'times',
-            'hash' => false,
+            // 'hash' => false,
         ],
+
+        // 'api' => [
+        //     'driver' => 'passport',
+        //     'provider' => 'times',
+        //     // 'hash' => false,
+        // ],
     ],
 
     /*
@@ -70,6 +76,7 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+        
         'times' => [
             'driver' => 'eloquent',
             'model' => App\Models\Time::class,

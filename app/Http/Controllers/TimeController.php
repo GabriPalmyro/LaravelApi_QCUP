@@ -6,9 +6,7 @@ use App\Models\Liga;
 use Illuminate\Http\Request;
 use App\Models\Time;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\AddPlayerEmail;
-use PhpParser\Node\Stmt\Echo_;
+use Illuminate\Support\Facades\Hash;
 
 class TimeController extends Controller
 {
@@ -57,6 +55,10 @@ class TimeController extends Controller
     {
         $ligas = Time::find($request->id_time)->ligas()->get();
         return response(["ligas" => $ligas], 200);
+    }
+
+    public function recuperarSenha(Request $request)
+    {
     }
 
     public function create()

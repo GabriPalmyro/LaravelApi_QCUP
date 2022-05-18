@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Laravel\Passport\HasApiTokens;
 
-class Time extends Authenticatable
+class Time extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -23,6 +23,28 @@ class Time extends Authenticatable
     protected $hidden = [
         'senha', 'remember_token',
     ];
+
+    
+    public function jogadores()
+    {
+        return $this->hasMany(Jogador::class, 'id_time');
+    }
+    
+    public function ligas()
+    {
+        return $this->belongsToMany(Liga::class, 'time_ligas', 'id_time', 'id_liga')
+        ->withPivot('pontos', 'vitorias', 'derrotas', 'empates');
+    }
+
+    public function partidas()
+    {
+        return $this->belongsToMany(Partida::class, 'time_partidas', 'id_time', 'id_partida')
+        ->withPivot('pontuacao');
+    }
+    
+    public function AauthAcessToken(){
+        return $this->hasMany(OauthAccessToken::class);
+    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -40,25 +62,4 @@ class Time extends Authenticatable
     public function getJWTCustomClaims() {
         return [];
     } 
-
-    public function jogadores()
-    {
-        return $this->hasMany(Jogador::class, 'id_time');
-    }
-
-    public function ligas()
-    {
-        return $this->belongsToMany(Liga::class, 'time_ligas', 'id_time', 'id_liga')
-            ->withPivot('pontos', 'vitorias', 'derrotas', 'empates');
-    }
-
-    public function partidas()
-    {
-        return $this->belongsToMany(Partida::class, 'time_partidas', 'id_time', 'id_partida')
-        ->withPivot('pontuacao');
-    }
-
-    public function AauthAcessToken(){
-        return $this->hasMany(OauthAccessToken::class);
-    }
 }
