@@ -13,7 +13,7 @@ class Time extends Authenticatable implements JWTSubject
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'times';
-    protected $fillable = ['nome', 'email', 'senha', 'logo', 'remember_token'];
+    protected $fillable = ['nome', 'email', 'password', 'logo', 'remember_token'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -21,7 +21,7 @@ class Time extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'senha', 'remember_token',
+        'password', 'remember_token',
     ];
 
     
