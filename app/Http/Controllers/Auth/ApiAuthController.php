@@ -32,7 +32,7 @@ class ApiAuthController extends Controller
         $validator = Validator::make($request->all(), [
             'nome'  =>      'required|string|max:100',
             'email' =>      'required|string|email|max:150|unique:times',
-            'password' =>    'required|string|min:6',
+            'password' =>   'required|string|min:6',
             'logo'  =>      'required|string|max:200',
         ], $messages);
 
@@ -80,7 +80,7 @@ class ApiAuthController extends Controller
                 "message" => "E-mail ou senha estão errados."
             ]);
         }
-        return response()->json(['time' => auth()->user(), 'auth' => $this->respondWithToken($token)]);
+        return response()->json(['time' => auth()->user(), 'token' => $token]);
     }
 
     /**
@@ -102,7 +102,7 @@ class ApiAuthController extends Controller
     {
         return  response()->json([
             'time' => auth()->user(),
-            'auth' => $this->respondWithToken(auth()->refresh())
+            'token' => auth()->refresh()
         ]);
     }
 

@@ -17,7 +17,8 @@ class CreateTimesTable extends Migration
             $table->id();
             $table->string('nome', 100);
             $table->string('email', 150);
-            $table->string('senha', 150);
+            $table->string('password', 150);
+            $table->boolean('email_verified')->nullable();
             $table->string('logo', 200)->nullable();
             $table->rememberToken();
             $table->timestamps();
