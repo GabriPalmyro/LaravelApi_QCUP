@@ -2,13 +2,11 @@
 
 namespace App\Mail;
 
-use App\Models\Time;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class AddPlayerEmail extends Mailable
+class sendResetPasswordEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,8 +29,7 @@ class AddPlayerEmail extends Mailable
      */
     public function build()
     {
-        // dd($this->details);
-        return $this->subject('Você foi adicionado a um time!')
-            ->view('emails.addPlayerEmail')->with('data', $this->details);
+        return $this->subject('Recuperação de senha')
+            ->view('emails.sendResetPassword')->with('data', $this->details);
     }
 }

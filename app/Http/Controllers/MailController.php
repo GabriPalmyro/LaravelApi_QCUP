@@ -14,7 +14,7 @@ class MailController extends Controller
             "body" => "Isso é um e-mail teste"
         ];
 
-        Mail::to("gabripalmyro13579@gmail.com")->send(new ConfirmEmail($details));
+        Mail::to("gabri.palmyro@gmail.com")->send(new ConfirmEmail($details));
         return "E-mail sent succesful";
     }
 

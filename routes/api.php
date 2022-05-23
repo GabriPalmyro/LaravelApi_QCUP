@@ -17,7 +17,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('/times/ligas', [TimeController::class, 'buscarLigasDoTime'])->name('buscarLigasDoTime.api');
     Route::post('/liga/times', [LigaController::class, 'buscarTimesDaLiga'])->name('buscarTimesDaLiga.api');
     Route::post('/liga', [LigaController::class, 'buscarLigaPorId'])->name('buscarLigaPorId.api');
-    Route::get('/email-send', [MailController::class, 'sendEmailTeste'])->name('sendEmailTeste.api');
+    Route::get('/email-send', [MailController::class, 'sendEmail'])->name('sendEmailTeste.api');
+    Route::post('/forgot-password', [TimeController::class, 'esqueciASenha'])->name('esqueciASenha.api');
+    Route::post('/reset-password', [TimeController::class, 'recuperarSenha'])->name('recuperarSenha.api');
 });
 
 Route::middleware('auth:api')->group(function () {

@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -31,6 +30,6 @@ class ConfirmEmail extends Mailable
     public function build()
     {
         return $this->subject('Inscrição confirmada - QCUP')
-            ->view('emails.confirmRegister');
+            ->view('emails.confirmEmail');
     }
 }

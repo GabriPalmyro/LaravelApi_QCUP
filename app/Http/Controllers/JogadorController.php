@@ -113,9 +113,12 @@ class JogadorController extends Controller
             'id_time' => $request->id_time,
         ]);
 
+        $time = Time::find($request->id_time);
+
         $details = [
             'title' => 'Você foi adicionado a um time!',
             'body' => "Você foi adicionado a um time!",
+            'time' => $time->nome
         ];
 
         Mail::to($request->email)->send(new AddPlayerEmail($details));

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 use App\Mail\AddPlayerEmail;
+use App\Mail\ConfirmEmail;
 use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Http\Request;
 
 class SendEmailController extends Controller
 {
-    public function SendEmailTeste()
+    public function sendEmailTeste()
     {
         $details = [
             'title' => 'Você foi adicionado a um time!',
@@ -16,7 +17,7 @@ class SendEmailController extends Controller
             'nome' => "teste"
         ];
 
-        Mail::to("gabripalmyro13579@gmail.com")->send(new AddPlayerEmail($details));
+        Mail::to("gabri.palmyro@gmail.com")->send(new ConfirmEmail($details));
 
     }
 }

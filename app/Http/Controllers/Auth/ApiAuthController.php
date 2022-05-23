@@ -74,11 +74,16 @@ class ApiAuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
+        $time = Time::where('email', $request->email)->first();
+
+        if(!$time)
+            return response()->json(['success'=> false, 'message' => 'Time não cadastrado no sistema.'], 422);
+
         if (!$token = auth()->attempt($credentials)) {
             return response()->json([
                 "sucess" => false,
                 "message" => "E-mail ou senha estão errados."
-            ]);
+            ], 422);
         }
         return response()->json(['time' => auth()->user(), 'token' => $token]);
     }
