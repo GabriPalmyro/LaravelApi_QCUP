@@ -29,7 +29,7 @@ class ConfirmEmail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Inscrição confirmada - QCUP')
-            ->view('emails.confirmEmail');
+        return $this->subject('Confirmação de e-mail - QCUP')
+            ->view('emails.confirmEmail')->with('data', $this->details);
     }
 }

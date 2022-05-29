@@ -8,6 +8,9 @@ use App\Models\Time;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ConfirmEmail;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 
 class ApiAuthController extends Controller
@@ -20,7 +23,7 @@ class ApiAuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'confirmEmail']]);
     }
 
     public function register(Request $request)
@@ -40,16 +43,27 @@ class ApiAuthController extends Controller
             return response(['message' => $validator->errors()->first('email')], 422);
         }
 
-        $time = Time::create([
+        Time::create([
             'nome' => $request->nome,
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'logo' => $request->logo,
         ]);
 
+        $token = Str::random(64);
+
+        //Create Confirm Email Token
+        DB::table('confirm_email')->insert([
+            'email' => $request->email,
+            'token' => $token,
+            'created_at' => Carbon::now()
+        ]);
+
+        $action_link = "qcup2021.web.app/my-team/confirm-email?token=" . $token . "&email=" . $request->email;
+
         $details = [
-            'title' => 'Inscrição confirmada!',
-            'body' => 'A QCUP confirmou sua inscrição'
+            'action_link' => $action_link,
+            'email' => $request->email
         ];
 
         Mail::to($request->email)->send(new ConfirmEmail($details));
@@ -61,6 +75,11 @@ class ApiAuthController extends Controller
             ]);
     }
 
+    /**
+     * Login User To System
+     *
+     * @return void
+     */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -76,16 +95,80 @@ class ApiAuthController extends Controller
 
         $time = Time::where('email', $request->email)->first();
 
-        if(!$time)
-            return response()->json(['success'=> false, 'message' => 'Time não cadastrado no sistema.'], 422);
+        if (!$time)
+            return response()->json(['message' => 'Não foi possível encontrar um time com essa credencial.'], 422);
 
         if (!$token = auth()->attempt($credentials)) {
             return response()->json([
-                "sucess" => false,
-                "message" => "E-mail ou senha estão errados."
+                "message" => "Senha incorreta. Tente novamente ou recupere sua senha."
             ], 422);
         }
+
+        if (!$time->email_verified_at) {
+            $tokenEmail = Str::random(64);
+
+            //Create Confirm Email Token
+            DB::table('confirm_email')->insert([
+                'email' => $request->email,
+                'token' => $tokenEmail,
+                'created_at' => Carbon::now()
+            ]);
+
+            $action_link = "qcup2021.web.app/my-team/confirm-email?token=" . $tokenEmail . "&email=" . $request->email;
+
+            $details = [
+                'action_link' => $action_link,
+                'email' => $request->email
+            ];
+
+            Mail::to($request->email)->send(new ConfirmEmail($details));
+            return response()->json(['message' => 'E-mail não verificado. Verifique o e-mail enviado a sua caixa postal para continuar.', 'token' => $token], 401);
+        }
+
         return response()->json(['time' => auth()->user(), 'token' => $token]);
+    }
+
+    /**
+     * Get the authenticated Time.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function confirmEmail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email'     =>          'required|email|exists:times,email',
+            'token'     =>          'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response(['success' => false, 'message' => $validator->errors()], 422);
+        }
+
+        $check_token = DB::table('confirm_email')->where([
+            'email' => $request->email,
+            'token' => $request->token
+        ])->first();
+
+        if (!$check_token) {
+            return response(['success' => false, 'message' => 'Token de confirmação não reconhecido.'], 422);
+        } else {
+
+            if ($check_token->is_valid == 0)
+                return response(['success' => false, 'message' => 'Token de confirmação expirado ou já utilizado.'], 422);
+
+            Time::where('email', $request->email)->update([
+                'email_verified_at' => Carbon::now()
+            ]);
+
+            DB::table('confirm_email')->where([
+                'email' => $request->email,
+                'token' => $request->token
+            ])->update([
+                'is_valid' => 0
+            ]);
+
+            return response(['success' => true, 'message' => 'E-mail confirmado com sucesso!', 'time' => auth()->user()], 200);
+        }
     }
 
     /**
@@ -95,7 +178,7 @@ class ApiAuthController extends Controller
      */
     public function getTimeData()
     {
-        return response()->json(auth()->user());
+        return response()->json(['time' => auth()->user()]);
     }
 
     /**

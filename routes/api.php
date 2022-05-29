@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('/login', [ApiAuthController::class, 'login'])->name('login.api');
     Route::post('/register', [ApiAuthController::class, 'register'])->name('register.api');
+    Route::post('times/confirm-email', [ApiAuthController::class, 'confirmEmail'])->name('confirmEmail.api');
     Route::get('/ligas', [LigaController::class, 'mostrarLigas'])->name('ligas.api');
     Route::get('/times', [TimeController::class, 'index'])->name('index.api');
     Route::post('/jogadores', [TimeController::class, 'buscarJogadoresDoTimePeloId'])->name('buscarJogadores.api');
@@ -30,5 +31,4 @@ Route::middleware('auth:api')->group(function () {
     Route::post('times/participar-liga', [TimeController::class, 'cadastrarTimeEmLiga'])->name('cadastrarTimeEmLiga.api');
 });
 
-Route::group(["middleware" => ["auth:api"]], function(){ 
-});
+Route::group(["middleware" => ["auth:api"]], function(){});
