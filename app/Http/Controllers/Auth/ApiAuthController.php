@@ -153,8 +153,14 @@ class ApiAuthController extends Controller
             return response(['success' => false, 'message' => 'Token de confirmação não reconhecido.'], 422);
         } else {
 
-            if ($check_token->is_valid == 0)
+            $dateToken = strtotime(str_replace('/', '-', $check_token->created_at));
+            $dateActual = time();
+
+            $intervalo = abs( $dateActual - $dateToken ) / 60;
+
+            if ($check_token->is_valid == 0 || $intervalo > 10)
                 return response(['success' => false, 'message' => 'Token de confirmação expirado ou já utilizado.'], 422);
+
 
             Time::where('email', $request->email)->update([
                 'email_verified_at' => Carbon::now()

@@ -10,11 +10,11 @@ class MailController extends Controller
 {
     public function sendEmail() {
         $details = [
-            "title" => "E-mail teste",
-            "body" => "Isso é um e-mail teste"
+            'action_link' => 'sadsadasda',
+            'email' => 'gabripalmyro@Hotmail.com'
         ];
 
-        Mail::to("gabri.palmyro@gmail.com")->send(new ConfirmEmail($details));
+        Mail::to("gabripalmyro13579@gmail.com")->send(new ConfirmEmail($details));
         return "E-mail sent succesful";
     }
 
